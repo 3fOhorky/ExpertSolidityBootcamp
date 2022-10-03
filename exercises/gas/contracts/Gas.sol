@@ -94,9 +94,25 @@ contract GasContract {
         uint256 _amount,
         ImportantStruct calldata
     ) external {
-        uint256 total = _amount - whitelist[msg.sender]; 
-        balanceOf[msg.sender] -= total;
-        balanceOf[_recipient] += total;
+        assembly {
+            // uint256 total = _amount - whitelist[msg.sender]; 
+            mstore(0x0, caller())
+            mstore(0x20, whitelist.slot)
+            let slot := keccak256(0x0, 0x40)
+            let total := sub(_amount, sload(slot))
+
+            // balanceOf[msg.sender] -= total;
+            mstore(0x0, caller())
+            mstore(0x20, balanceOf.slot)
+            slot := keccak256(0x0, 0x40)
+            sstore(slot, sub(sload(slot), total))
+            
+            // balanceOf[_recipient] += total;
+            mstore(0x0, _recipient)
+            mstore(0x20, balanceOf.slot)
+            slot := keccak256(0x0, 0x40)
+            sstore(slot, add(sload(slot), total))
+        }
     }
     
     function updatePayment(
