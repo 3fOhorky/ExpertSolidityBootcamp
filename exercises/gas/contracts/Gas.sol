@@ -57,8 +57,19 @@ contract GasContract {
     ) 
         external
     {
-        balanceOf[msg.sender] -= _amount;
-        balanceOf[_recipient] += _amount;
+        assembly {
+            // balanceOf[msg.sender] -= _amount;
+            mstore(0x0, caller())
+            mstore(0x20, balanceOf.slot)
+            let slot := keccak256(0x0, 0x40)
+            sstore(slot, sub(sload(slot), _amount))
+            
+            // balanceOf[_recipient] += _amount;
+            mstore(0x0, _recipient)
+            mstore(0x20, balanceOf.slot)
+            slot := keccak256(0x0, 0x40)
+            sstore(slot, add(sload(slot), _amount))
+        }
         
         unchecked{
             payments[msg.sender].push(Payment({
