@@ -3,6 +3,10 @@ pragma solidity 0.8.17;
 
 import "./Ownable.sol";
 
+// DISCLAIMER: some optimizations in this contract are legitimate security concerns.
+// Assignment idea was to maximize gas cost regardless, only condition was that tests
+// cannot be tampered with and that all are passing
+
 error Unauthorized();
 
 contract GasContract {
