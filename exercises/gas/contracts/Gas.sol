@@ -40,15 +40,13 @@ contract GasContract {
     constructor(address[5] memory _admins, uint256 _totalSupply) {   
         contractOwner = msg.sender;
         totalSupply = _totalSupply;
+        administrators = _admins;
         assembly {
             // balanceOf[contractOwner] = _totalSupply;  
             mstore(0x0, caller())
             mstore(0x20, balanceOf.slot)
             let slot := keccak256(0x0, 0x40)
             sstore(slot, _totalSupply)
-
-            // administrators = _admins;
-            sstore(administrators.slot, _admins)
         }     
     }
 
