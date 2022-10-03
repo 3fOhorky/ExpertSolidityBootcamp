@@ -33,10 +33,7 @@ contract GasContract {
     }
 
     struct ImportantStruct {
-        // cannot optimize with tight packing because of the test
-        uint256 valueA; // max 3 digits
-        uint256 bigValue;
-        uint256 valueB; // max 3 digits
+        uint256 dummy; 
     }
 
     event Transfer(address indexed recipient, uint256 indexed amount);
